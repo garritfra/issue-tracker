@@ -1,13 +1,18 @@
 const express = require("express");
+const TicketService = require("../service/TicketService");
 
-const Ticket = require("../model/Ticket");
+const ticketService = new TicketService();
 
 const controller = express.Router();
 
 controller.get("/", (req, res) => {
-  Ticket.find({})
-    .then(doc => res.send(doc))
-    .catch(err => res.send(err));
+  const status = req.query.status;
+  const tickets =
+    status === undefined
+      ? ticketService.getAllTickets()
+      : ticketService.getAllTicketsWithStatus(status);
+
+  tickets.then(doc => res.send(doc)).catch(err => res.send(err));
 });
 
 controller.post("/", (req, res) => {
@@ -22,6 +27,17 @@ controller.post("/", (req, res) => {
 controller.delete("/", (req, res) => {
   Ticket.deleteMany({})
     .then(r => res.send(r))
+    .catch(err => res.send(err));
+});
+
+controller.post("/:ticketId/move", (req, res) => {
+  const ticketId = req.params.ticketId;
+  const newStatus = req.query.to;
+  ticketService
+    .updateTicketStatus(ticketId, newStatus)
+    .then(ticket => {
+      res.send(ticket);
+    })
     .catch(err => res.send(err));
 });
 
