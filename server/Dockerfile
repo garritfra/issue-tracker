@@ -1,6 +1,12 @@
-FROM node:alpine
+FROM node:alpine as build
+WORKDIR /app
 COPY . .
+RUN npm i && npm run build
 
-RUN npm install
 
-CMD [ "npm", "start" ]
+FROM node:alpine
+WORKDIR /app
+COPY --from=build /app .
+
+
+CMD [ "node", "dist/server.js" ]

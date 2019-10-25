@@ -3,14 +3,14 @@ const webpack = require("webpack");
 const nodeExternals = require("webpack-node-externals");
 module.exports = {
   entry: {
-    server: "./server.js"
+    server: "./src/server.js"
   },
   output: {
     path: path.join(__dirname, "dist"),
     publicPath: "/",
     filename: "[name].js"
   },
-  mode: "development",
+  mode: "production",
   target: "node",
   node: {
     // Need this when working with express, otherwise the build fails
@@ -25,7 +25,10 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"]
+          }
         }
       }
     ]
