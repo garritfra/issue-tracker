@@ -11,4 +11,4 @@ mongoose.connect(process.env.MONGO_DATABASE_URL + "/issuetracker", {
 
 app.use("/tickets", require("./controller/TicketController"));
 
-app.listen(8080);
+app.listen(process.env.PORT || 8080);
